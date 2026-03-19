@@ -1,0 +1,19 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Booking {
+  id           Int      @id @default(autoincrement())
+  customerName String
+  phone        String
+  carType      String
+  service      String
+  bookingDate  DateTime
+  status       String   @default("pending")
+  createdAt    DateTime @default(now())
+}
