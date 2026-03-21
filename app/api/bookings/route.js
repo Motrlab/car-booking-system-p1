@@ -112,7 +112,7 @@ export async function POST(req) {
       try {
   await client.messages.create({
     from: "whatsapp:+14155238886",
-    to: 'whatsapp:+${phone}',
+    to: `whatsapp:+${phone}`,
     body: `مرحبا ${body.customerName} 👋
 
 تم استلام حجزك في MotrLab 🚗
