@@ -117,7 +117,14 @@ export async function POST(req) {
 
 تم استلام حجزك في MotrLab 🚗
 الخدمة: ${body.service}
-الموعد: ${bookingDate.toLocaleString("ar-SA")}
+الموعد: ${bookingDate.toLocaleString("ar-SA", {
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: true,
+  year: "numeric",
+  month: "long",
+  day: "numeric"
+})}
 
 شكرًا لثقتك.`,
   });
