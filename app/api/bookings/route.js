@@ -93,52 +93,37 @@ export async function POST(req) {
       const phone = booking.phone.startsWith("0")
         ? "966" + booking.phone.substring(1)
         : booking.phone;
-/*
-      try {
-        await client.messages.create({
-          from: "whatsapp:+14155238886", // رقم Twilio Sandbox
-          to: `whatsapp:+${phone}`,
-          body: `مرحبا ${data.customerName} 👋
-      تم تأكيد حجزك في MotrLab 🚗
 
-      📅 الموعد: ${new Date(data.date).toLocaleString("ar-SA")}
-
-      نشكرك على ثقتك 🙏`,
-        });
-      } catch (err) {
-        console.error("WhatsApp error:", err);
-      }
-*/
       try {
-        const bookingDate = new Date(data.date);
+        const bookingDate = new Date(body.date);
 
         const formattedDate = bookingDate.toLocaleDateString(
-          data.lang === "en" ? "en-US" : "ar-SA"
+          body.lang === "en" ? "en-US" : "ar-SA"
         );
 
         const formattedTime = bookingDate.toLocaleTimeString(
-          data.lang === "en" ? "en-US" : "ar-SA",
+          body.lang === "en" ? "en-US" : "ar-SA",
           {
             hour: "2-digit",
             minute: "2-digit",
           }
         );
   const message =
-          data.lang === "en"
-            ? `Hello ${data.customerName} 👋
+          body.lang === "en"
+            ? `Hello ${body.customerName} 👋
 
         Your booking has been confirmed at MotrLab 🚗
 
-        Service: ${data.service}
+        Service: ${body.service}
         Date: ${formattedDate}
         Time: ${formattedTime}
 
         Thank you 🙏`
-            : `مرحبا ${data.customerName} 👋
+            : `مرحبا ${body.customerName} 👋
 
         تم تأكيد حجزك في MotrLab 🚗
 
-        الخدمة: ${data.service}
+        الخدمة: ${body.service}
         التاريخ: ${formattedDate}
         الوقت: ${formattedTime}
 
