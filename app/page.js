@@ -11,13 +11,14 @@ export default function Home() {
     phone: "",
     carType: "",
     service: "",
-    date: new Date(),
+    date: null,
   });
 
   const [bookedDates, setBookedDates] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [bookingsLoading, setBookingsLoading] = useState(true);
+  const selectedDateForLogic = formData.date ? new Date(formData.date) : new Date();
 
   useEffect(() => {
     fetchBookings();
@@ -50,7 +51,7 @@ export default function Home() {
   };
 
   const getMinTime = () => {
-    const selected = formData.date ? new Date(formData.date) : new Date();
+    const selected = selectedDateForLogic;
 
     const workStart = new Date(
       selected.getFullYear(),
@@ -68,7 +69,7 @@ export default function Home() {
   };
 
   const getMaxTime = () => {
-    const selected = formData.date ? new Date(formData.date) : new Date();
+    const selected = selectedDateForLogic;
 
     return new Date(
       selected.getFullYear(),
@@ -88,7 +89,7 @@ export default function Home() {
 
   const isTimeAvailable = (time) => {
     const currentNow = new Date();
-    const selected = formData.date ? new Date(formData.date) : new Date();
+    const selected = selectedDateForLogic;
 
     const isToday =
       selected.getFullYear() === currentNow.getFullYear() &&
