@@ -110,23 +110,43 @@ export async function POST(req) {
       }
 */
       try {
+        const bookingDate = new Date(data.date);
+
+        const formattedDate = bookingDate.toLocaleDateString(
+          data.lang === "en" ? "en-US" : "ar-SA"
+        );
+
+        const formattedTime = bookingDate.toLocaleTimeString(
+          data.lang === "en" ? "en-US" : "ar-SA",
+          {
+            hour: "2-digit",
+            minute: "2-digit",
+          }
+        );
+  const message =
+          data.lang === "en"
+            ? `Hello ${data.customerName} 👋
+
+        Your booking has been confirmed at MotrLab 🚗
+
+        Service: ${data.service}
+        Date: ${formattedDate}
+        Time: ${formattedTime}
+
+        Thank you 🙏`
+            : `مرحبا ${data.customerName} 👋
+
+        تم تأكيد حجزك في MotrLab 🚗
+
+        الخدمة: ${data.service}
+        التاريخ: ${formattedDate}
+        الوقت: ${formattedTime}
+
+        شكراً لثقتك 🙏`;
   await client.messages.create({
     from: "whatsapp:+14155238886",
     to: `whatsapp:+${phone}`,
-    body: `مرحبا ${body.customerName} 👋
-
-تم استلام حجزك في MotrLab 🚗
-الخدمة: ${body.service}
-الموعد: ${bookingDate.toLocaleString("ar-SA", {
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: true,
-  year: "numeric",
-  month: "long",
-  day: "numeric"
-})}
-
-شكرًا لثقتك.`,
+    body: message
   });
 
   console.log("WhatsApp sent successfully");

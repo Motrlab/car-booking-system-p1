@@ -231,7 +231,10 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedForm),
+        body: JSON.stringify({
+            ...updatedForm,
+            lang,
+          }),
       });
 
       const data = await res.json();
