@@ -90,10 +90,10 @@ export async function POST(req) {
       },
     });
       // تحويل الرقم إلى صيغة دولية
-      const phone = data.phone.startsWith("0")
-        ? "966" + data.phone.substring(1)
-        : data.phone;
-
+      const phone = booking.phone.startsWith("0")
+        ? "966" + booking.phone.substring(1)
+        : booking.phone;
+/*
       try {
         await client.messages.create({
           from: "whatsapp:+14155238886", // رقم Twilio Sandbox
@@ -108,6 +108,27 @@ export async function POST(req) {
       } catch (err) {
         console.error("WhatsApp error:", err);
       }
+*/
+      try {
+  await client.messages.create({
+    from: "whatsapp:+14155238886",
+    to: 'whatsapp:+${phone}',
+    body: `مرحبا ${body.customerName} 👋
+
+تم استلام حجزك في MotrLab 🚗
+الخدمة: ${body.service}
+الموعد: ${bookingDate.toLocaleString("ar-SA")}
+
+شكرًا لثقتك.`,
+  });
+
+  console.log("WhatsApp sent successfully");
+} catch (whatsErr) {
+  console.error("WhatsApp error:", whatsErr);
+}
+
+console.log("Original phone:", body.phone);
+console.log("Formatted phone:", phone);
     return NextResponse.json({
       success: true,
       booking,

@@ -187,7 +187,9 @@ export default function Home() {
           date: new Date(),
         });
       } else {
-        setErrorMessage(data.message || "حدث خطأ ❌");
+        //setErrorMessage(data.message || "حدث خطأ ❌");
+        setErrorMessage(data.message || JSON.stringify(data) || "حدث خطأ ❌");
+console.error("submit response:", data);
       }
     } catch (error) {
       console.error("submit error:", error);
