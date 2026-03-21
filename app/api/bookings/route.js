@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+import twilio from "twilio";
+
+const client = twilio(
+  process.env.TWILIO_SID,
+  process.env.TWILIO_AUTH
+);
 export async function GET() {
   try {
     const bookings = await prisma.booking.findMany({
@@ -83,7 +89,25 @@ export async function POST(req) {
         bookingDate,
       },
     });
+      // تحويل الرقم إلى صيغة دولية
+      const phone = data.phone.startsWith("0")
+        ? "966" + data.phone.substring(1)
+        : data.phone;
 
+      try {
+        await client.messages.create({
+          from: "whatsapp:+14155238886", // رقم Twilio Sandbox
+          to: `whatsapp:+${phone}`,
+          body: `مرحبا ${data.customerName} 👋
+      تم تأكيد حجزك في MotrLab 🚗
+
+      📅 الموعد: ${new Date(data.date).toLocaleString("ar-SA")}
+
+      نشكرك على ثقتك 🙏`,
+        });
+      } catch (err) {
+        console.error("WhatsApp error:", err);
+      }
     return NextResponse.json({
       success: true,
       booking,
