@@ -89,7 +89,7 @@ export default function Home() {
 
   const isTimeAvailable = (time) => {
     const currentNow = new Date();
-    const selected = selectedDateForLogic;
+    const selected = selectedDateForLogic ;
 
     const isToday =
       selected.getFullYear() === currentNow.getFullYear() &&
@@ -185,7 +185,7 @@ export default function Home() {
           phone: "",
           carType: "",
           service: "",
-          date: new Date(),
+          date: null,
         });
       } else {
         //setErrorMessage(data.message || "حدث خطأ ❌");
