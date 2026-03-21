@@ -13,12 +13,76 @@ export default function Home() {
     service: "",
     date: null,
   });
+    const [lang, setLang] = useState("ar");
+ const isArabic = lang === "ar";
+  const inputStyle = {
+  padding: "14px",
+  border: "1px solid #ddd",
+  borderRadius: "12px",
+  fontSize: "16px",
+  width: "100%",
+  minHeight: "52px",
+  boxSizing: "border-box",
+  textAlign: isArabic ? "right" : "left",
+};
 
   const [bookedDates, setBookedDates] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [bookingsLoading, setBookingsLoading] = useState(true);
   const selectedDateForLogic = formData.date ? new Date(formData.date) : new Date();
+
+
+   
+
+    const t = {
+      ar: {
+        title: "حجز موعد العناية بالسيارات",
+        subtitle: "اختر الخدمة والوقت المناسب وأرسل طلبك بسهولة",
+        customerName: "اسم العميل",
+        phone: "رقم الجوال",
+        carType: "نوع السيارة",
+        service: "اختر الخدمة",
+        date: "اختر التاريخ والوقت",
+        loadingDates: "جاري تحميل المواعيد...",
+        bookNow: "حجز الموعد",
+        requiredName: "اسم العميل مطلوب",
+        requiredPhone: "رقم الجوال مطلوب",
+        invalidPhone: "رقم الجوال يجب أن يكون 10 أرقام",
+        requiredDate: "يرجى اختيار التاريخ والوقت",
+        success: "تم الحجز بنجاح ✅",
+        error: "حدث خطأ ❌",
+        sendingError: "فيه خطأ أثناء الإرسال",
+        polishing: "تلميع",
+        tinting: "تظليل",
+        ppf: "PPF",
+        detailing: "تنظيف تفصيلي",
+        langBtn: "EN"
+      },
+      en: {
+        title: "Car Care Appointment Booking",
+        subtitle: "Choose your service and preferred time easily",
+        customerName: "Customer Name",
+        phone: "Mobile Number",
+        carType: "Car Type",
+        service: "Select Service",
+        date: "Select date and time",
+        loadingDates: "Loading available appointments...",
+        bookNow: "Book Appointment",
+        requiredName: "Customer name is required",
+        requiredPhone: "Mobile number is required",
+        invalidPhone: "Mobile number must be 10 digits",
+        requiredDate: "Please select date and time",
+        success: "Booking completed successfully ✅",
+        error: "An error occurred ❌",
+        sendingError: "There was an error sending the request",
+        polishing: "Polishing",
+        tinting: "Window Tinting",
+        ppf: "PPF",
+        detailing: "Detailing",
+        langBtn: "AR"
+      }
+    };
 
   useEffect(() => {
     fetchBookings();
@@ -127,8 +191,7 @@ export default function Home() {
       setErrorMessage("");
       
       if (!formData.customerName.trim()) {
-        setErrorMessage("اسم العميل مطلوب");
-        return;
+          setErrorMessage(t[lang].requiredName);        return;
       }
       // تحويل الأرقام العربية إلى إنجليزية
   const convertArabicToEnglish = (num) => {
@@ -140,25 +203,24 @@ export default function Home() {
 
     // التحقق
     if (!cleanedPhone) {
-      setErrorMessage("رقم الجوال مطلوب");
+      setErrorMessage(t[lang].requiredPhone);
       return;
     }
 
     if (!/^\d{10}$/.test(cleanedPhone)) {
-      setErrorMessage("رقم الجوال يجب أن يكون 10 أرقام");
+      setErrorMessage(t[lang].invalidPhone);
       return;
     }
 
 
 
       if (!formData.phone.trim()) {
-        setErrorMessage("رقم الجوال مطلوب");
+      setErrorMessage(t[lang].requiredPhone);
         return;
       }
 
       if (!formData.date) {
-        setErrorMessage("يرجى اختيار التاريخ والوقت");
-        return;
+      setErrorMessage(t[lang].requiredDate);        return;
       }
       const updatedForm = {
         ...formData,
@@ -175,7 +237,7 @@ export default function Home() {
       const data = await res.json();
 
       if (res.ok) {
-        setSuccessMessage("تم الحجز بنجاح ✅");
+        setSuccessMessage(t[lang].success);         
         setErrorMessage("");
 
         await fetchBookings();
@@ -189,19 +251,28 @@ export default function Home() {
         });
       } else {
         //setErrorMessage(data.message || "حدث خطأ ❌");
-        setErrorMessage(data.message || JSON.stringify(data) || "حدث خطأ ❌");
-console.error("submit response:", data);
+          setErrorMessage(data.message || t[lang].error);console.error("submit response:", data);
       }
     } catch (error) {
       console.error("submit error:", error);
-      setErrorMessage("فيه خطأ أثناء الإرسال");
-      setSuccessMessage("");
+          setErrorMessage(t[lang].sendingError);      setSuccessMessage("");
     }
   };
 
   return (
-    <main className="booking-page">
+    <main className="booking-page"
+     dir={isArabic ? "rtl" : "ltr"}
+     >
       <div className="booking-card">
+        <div className="lang-switcher">
+          <button
+            type="button"
+            className="lang-button"
+            onClick={() => setLang(isArabic ? "en" : "ar")}
+          >
+            {t[lang].langBtn}
+          </button>
+        </div>
         <div className="booking-header">
           <img
           src="/logo.png"
@@ -210,8 +281,8 @@ console.error("submit response:", data);
           height={90}
           className="logo"
           property/>
-          <h1>حجز موعد العناية بالسيارات</h1>
-          <p>اختر الخدمة والوقت المناسب وأرسل طلبك بسهولة</p>
+          <h1>{t[lang].title}</h1>
+          <p>{t[lang].subtitle}</p>
         </div>
 
         <form className="booking-form">
@@ -219,7 +290,7 @@ console.error("submit response:", data);
             name="customerName"
             value={formData.customerName}
             onChange={handleChange}
-            placeholder="اسم العميل"
+            placeholder={t[lang].customerName}
             style={inputStyle}
           />
 
@@ -227,7 +298,7 @@ console.error("submit response:", data);
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            placeholder="رقم الجوال (05xxxxxxxx)"
+            placeholder={t[lang].phone}
             style={inputStyle}
             inputMode="numeric"
           />
@@ -236,21 +307,21 @@ console.error("submit response:", data);
             name="carType"
             value={formData.carType}
             onChange={handleChange}
-            placeholder="نوع السيارة"
+            placeholder={t[lang].carType}
             style={inputStyle}
           />
 
-          <select
+              <select
             name="service"
             value={formData.service}
             onChange={handleChange}
             style={inputStyle}
           >
-            <option value="">اختر الخدمة</option>
-            <option value="تلميع">تلميع</option>
-            <option value="تظليل">تظليل</option>
-            <option value="PPF">PPF</option>
-            <option value="تنظيف تفصيلي">تنظيف تفصيلي</option>
+            <option value="">{t[lang].service}</option>
+            <option value="تلميع">{t[lang].polishing}</option>
+            <option value="تظليل">{t[lang].tinting}</option>
+            <option value="PPF">{t[lang].ppf}</option>
+            <option value="تنظيف تفصيلي">{t[lang].detailing}</option>
           </select>
 
           <div className="date-wrapper">
@@ -261,9 +332,9 @@ console.error("submit response:", data);
               showTimeSelect
               timeIntervals={30}
               dateFormat="EEEE, dd MMMM yyyy - hh:mm aa"
-              placeholderText={
-                bookingsLoading ? "جاري تحميل المواعيد..." : "اختر التاريخ والوقت"
-              }
+             placeholderText={
+                  bookingsLoading ? t[lang].loadingDates : t[lang].date
+                }
               className="custom-date-input"
               wrapperClassName="full-width"
               filterTime={isTimeAvailable}
@@ -280,8 +351,7 @@ console.error("submit response:", data);
             type="button"
             onClick={handleSubmit}
           >
-            حجز الموعد
-          </button>
+              {t[lang].bookNow}          </button>
 
           {successMessage && (
             <div className="message-success">{successMessage}</div>
@@ -296,12 +366,3 @@ console.error("submit response:", data);
   );
 }
 
-const inputStyle = {
-  padding: "14px",
-  border: "1px solid #ddd",
-  borderRadius: "12px",
-  fontSize: "16px",
-  width: "100%",
-  minHeight: "52px",
-  boxSizing: "border-box",
-};
