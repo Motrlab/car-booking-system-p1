@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Image from "next/image";
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -176,6 +177,13 @@ export default function Home() {
     <main className="booking-page">
       <div className="booking-card">
         <div className="booking-header">
+          <img
+          src="/logo.png"
+          alt="Motrlab Logo"
+          width={180}
+          height={90}
+          className="logo"
+          property/>
           <h1>حجز موعد العناية بالسيارات</h1>
           <p>اختر الخدمة والوقت المناسب وأرسل طلبك بسهولة</p>
         </div>
