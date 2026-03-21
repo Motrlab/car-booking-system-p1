@@ -124,11 +124,31 @@ export default function Home() {
     try {
       setSuccessMessage("");
       setErrorMessage("");
-
+      
       if (!formData.customerName.trim()) {
         setErrorMessage("اسم العميل مطلوب");
         return;
       }
+      // تحويل الأرقام العربية إلى إنجليزية
+  const convertArabicToEnglish = (num) => {
+      return num.replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+    };
+
+    // تنظيف الرقم (إزالة المسافات)
+    const cleanedPhone = convertArabicToEnglish(formData.phone).replace(/\s/g, "");
+
+    // التحقق
+    if (!cleanedPhone) {
+      setErrorMessage("رقم الجوال مطلوب");
+      return;
+    }
+
+    if (!/^\d{10}$/.test(cleanedPhone)) {
+      setErrorMessage("رقم الجوال يجب أن يكون 10 أرقام");
+      return;
+    }
+
+
 
       if (!formData.phone.trim()) {
         setErrorMessage("رقم الجوال مطلوب");
@@ -139,13 +159,16 @@ export default function Home() {
         setErrorMessage("يرجى اختيار التاريخ والوقت");
         return;
       }
-
+      const updatedForm = {
+        ...formData,
+        phone: cleanedPhone,
+      };
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(updatedForm),
       });
 
       const data = await res.json();
@@ -197,12 +220,13 @@ export default function Home() {
             style={inputStyle}
           />
 
-          <input
+         <input
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            placeholder="رقم الجوال"
+            placeholder="رقم الجوال (05xxxxxxxx)"
             style={inputStyle}
+            inputMode="numeric"
           />
 
           <input
