@@ -239,10 +239,22 @@ export default function Home() {
 
       const data = await res.json();
 
-      if (res.ok) {
-        setSuccessMessage(t[lang].success);         
-        setErrorMessage("");
+     if (res.ok) {
+      if (data.whatsappSent) {
+        setSuccessMessage(
+          lang === "en"
+            ? "Booking confirmed and WhatsApp sent ✅"
+            : "تم تأكيد الحجز وتم إرسال واتساب ✅"
+        );
+      } else {
+        setSuccessMessage(
+          lang === "en"
+            ? "Booking confirmed but WhatsApp failed ⚠️"
+            : "تم الحجز لكن فشل إرسال واتساب ⚠️"
+        );
+      }
 
+  setErrorMessage("");
         await fetchBookings();
 
         setFormData({

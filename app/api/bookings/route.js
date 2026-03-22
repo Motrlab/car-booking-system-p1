@@ -87,16 +87,87 @@ export async function POST(req) {
         carType: body.carType,
         service: body.service,
         bookingDate,
-      },
+      }
     });
     console.log("bookingDate : " || bookingDate.getDate());
       // تحويل الرقم إلى صيغة دولية
       const phone = booking.phone.startsWith("0")
         ? "966" + booking.phone.substring(1)
         : booking.phone;
-
+      let whatsappSent = false;
       try {
         const bookingDate = new Date(body.date);
+
+        const formattedDate = bookingDate.toLocaleDateString(
+          body.lang === "en" ? "en-US" : "ar-SA"
+        );
+
+        const formattedTime = bookingDate.toLocaleTimeString(
+          body.lang === "en" ? "en-US" : "ar-SA",
+          {
+            timeZone:"Asia/Riyadh",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          }
+        );
+
+        const serviceName =
+          body.lang === "en"
+            ? {
+                "تلميع": "Polishing",
+                "تظليل": "Window Tinting",
+                "PPF": "PPF",
+                "تنظيف تفصيلي": "Detailing",
+              }[body.service] || body.service
+            : body.service;
+
+        let phone = String(body.phone).replace(/\D/g, "");
+        if (phone.startsWith("05")) {
+          phone = "966" + phone.substring(1);
+        }
+
+        const contentSid =
+          body.lang === "en"
+            ? process.env.TWILIO_TEMPLATE_EN
+            : process.env.TWILIO_TEMPLATE_AR;
+
+        await client.messages.create({
+          from: "whatsapp:+14155238886",
+          to: `whatsapp:+${phone}`,
+          contentSid,
+          contentVariables: JSON.stringify({
+            "1": body.customerName,
+            "2": serviceName,
+            "3": formattedDate,
+            "4": formattedTime,
+          }),
+        });
+        console.log("WhatsApp sent successfully");
+        whatsappSent = true;
+    } catch (err) {
+      console.error("WhatsApp error:", err);
+    }
+
+      console.log("Original phone:", body.phone);
+      console.log("Formatted phone:", phone);
+          return NextResponse.json({
+            success: true,
+            booking,
+            whatsappSent,
+          });
+        }catch (error) {
+          console.error(error);
+          return NextResponse.json(
+            {
+              success: false,
+              message: "حدث خطأ أثناء حفظ الحجز",
+            },
+            { status: 500 }
+          );
+        }
+      }
+        /*
 
         const formattedDate = bookingDate.toLocaleDateString(
           body.lang === "en" ? "en-US" : "ar-SA"      );
@@ -116,7 +187,7 @@ export async function POST(req) {
         Your booking has been confirmed at MotrLab 🚗
 
         Service: ${body.service}
-        Date: ${formattedDate}
+        Date: ${formattedDate} 
         Time: ${formattedTime}
 
         Thank you 🙏`
@@ -134,25 +205,4 @@ export async function POST(req) {
     to: `whatsapp:+${phone}`,
     body: message
   });
-  console.log("WhatsApp sent successfully");
-} catch (whatsErr) {
-  console.error("WhatsApp error:", whatsErr);
-}
-
-console.log("Original phone:", body.phone);
-console.log("Formatted phone:", phone);
-    return NextResponse.json({
-      success: true,
-      booking,
-    });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      {
-        success: false,
-        message: "حدث خطأ أثناء حفظ الحجز",
-      },
-      { status: 500 }
-    );
-  }
-}
+  */
