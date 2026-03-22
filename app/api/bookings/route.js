@@ -89,6 +89,7 @@ export async function POST(req) {
         bookingDate,
       },
     });
+    console.log("bookingDate : " || bookingDate.getDate());
       // تحويل الرقم إلى صيغة دولية
       const phone = booking.phone.startsWith("0")
         ? "966" + booking.phone.substring(1)
@@ -98,12 +99,12 @@ export async function POST(req) {
         const bookingDate = new Date(body.date);
 
         const formattedDate = bookingDate.toLocaleDateString(
-          body.lang === "en" ? "en-US" : "ar-SA"
-        );
+          body.lang === "en" ? "en-US" : "ar-SA"      );
 
         const formattedTime = bookingDate.toLocaleTimeString(
           body.lang === "en" ? "en-US" : "ar-SA",
           {
+            timeZone:"Asia/Riyadh",
             hour: "2-digit",
             minute: "2-digit",
           }
@@ -133,7 +134,6 @@ export async function POST(req) {
     to: `whatsapp:+${phone}`,
     body: message
   });
-
   console.log("WhatsApp sent successfully");
 } catch (whatsErr) {
   console.error("WhatsApp error:", whatsErr);
