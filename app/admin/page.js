@@ -211,28 +211,27 @@ export default function AdminPage() {
             alignItems: "center",
           }}
         >
-          <button
-            style={activeFilter === "previous" ? activeTabStyle : tabStyle}
-            onClick={() => setActiveFilter("previous")}
-          >
-            <span style={{ marginLeft: "6px" }}>⏪</span>
-            السابقة
+           <button
+            style={activeFilter === "upcoming" ? activeTabStyle : tabStyle}
+            onClick={() => setActiveFilter("upcoming")}
+          > <span style={{ marginRight: "6px" }}>⏪</span>
+            الجديدة / القادمة
           </button>
-
           <button
             style={activeFilter === "today" ? activeTabStyle : tabStyle}
             onClick={() => setActiveFilter("today")}
           >
             📅 اليوم
           </button>
-
           <button
-            style={activeFilter === "upcoming" ? activeTabStyle : tabStyle}
-            onClick={() => setActiveFilter("upcoming")}
+            style={activeFilter === "previous" ? activeTabStyle : tabStyle}
+            onClick={() => setActiveFilter("previous")}
           >
-            الجديدة / القادمة
-            <span style={{ marginRight: "6px" }}>⏩</span>
+            السابقة
+            <span style={{ marginLeft: "6px" }}>⏩</span>
           </button>
+
+         
 
           <div style={{ marginLeft: "auto" }}></div>
 

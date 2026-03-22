@@ -40,7 +40,7 @@ export default function Home() {
         title: "حجز موعد العناية بالسيارات",
         subtitle: "اختر الخدمة والوقت المناسب وأرسل طلبك بسهولة",
         customerName: "اسم العميل",
-        phone: "رقم الجوال",
+        phone:"رقم الجوال (05xxxxxxxx)",
         carType: "نوع السيارة",
         service: "اختر الخدمة",
         date: "اختر التاريخ والوقت",
@@ -63,7 +63,7 @@ export default function Home() {
         title: "Car Care Appointment Booking",
         subtitle: "Choose your service and preferred time easily",
         customerName: "Customer Name",
-        phone: "Mobile Number",
+        phone: "Mobile Number (05xxxxxxxx)",
         carType: "Car Type",
         service: "Select Service",
         date: "Select date and time",
@@ -299,6 +299,7 @@ export default function Home() {
 
          <input
             name="phone"
+            type="tel"
             value={formData.phone}
             onChange={handleChange}
             placeholder={t[lang].phone}
