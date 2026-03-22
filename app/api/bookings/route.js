@@ -127,15 +127,15 @@ export async function POST(req) {
           phone = "966" + phone.substring(1);
         }
 
-        const contentSid =
+       /* const contentSid =
           body.lang === "en"
             ? process.env.TWILIO_TEMPLATE_EN
-            : process.env.TWILIO_TEMPLATE_AR;
+            : process.env.TWILIO_TEMPLATE_AR;*/
 
         await client.messages.create({
           from: "whatsapp:+14155238886",
           to: `whatsapp:+${phone}`,
-          contentSid,
+          contentSid: process.env.TWILIO_TEMPLATE_SID,
           contentVariables: JSON.stringify({
             "1": body.customerName,
             "2": serviceName,
@@ -155,6 +155,7 @@ export async function POST(req) {
             success: true,
             booking,
             whatsappSent,
+          
           });
         }catch (error) {
           console.error(error);
