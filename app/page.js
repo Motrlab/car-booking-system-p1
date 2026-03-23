@@ -13,6 +13,7 @@ export default function Home() {
     service: "",
     date: null,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
     const [lang, setLang] = useState("ar");
  const isArabic = lang === "ar";
   const inputStyle = {
@@ -57,7 +58,8 @@ export default function Home() {
         tinting: "تظليل",
         ppf: "PPF",
         detailing: "تنظيف تفصيلي",
-        langBtn: "EN"
+        langBtn: "EN",
+        submitting: "جاري الحجز...",
       },
       en: {
         title: "Car Care Appointment Booking",
@@ -80,7 +82,8 @@ export default function Home() {
         tinting: "Window Tinting",
         ppf: "PPF",
         detailing: "Detailing",
-        langBtn: "AR"
+        langBtn: "AR",
+        submitting: "Booking...",
       }
     };
 
@@ -187,9 +190,10 @@ export default function Home() {
 
   const handleSubmit = async () => {
     try {
+       if (isSubmitting) return;
       setSuccessMessage("");
       setErrorMessage("");
-      
+      setIsSubmitting(true);
       if (!formData.customerName.trim()) {
           setErrorMessage(t[lang].requiredName);        return;
       }
@@ -271,6 +275,9 @@ export default function Home() {
     } catch (error) {
       console.error("submit error:", error);
           setErrorMessage(t[lang].sendingError);      setSuccessMessage("");
+    }
+    finally{ 
+      setIsSubmitting(false);
     }
   };
 
@@ -362,12 +369,17 @@ export default function Home() {
             <span className="date-arrow">▼</span>
           </div>
 
-          <button
+         <button
             className="booking-button"
             type="button"
             onClick={handleSubmit}
+            disabled={isSubmitting}
           >
-              {t[lang].bookNow}          </button>
+            <span className="button-content">
+              {isSubmitting && <span className="button-spinner"></span>}
+              <span>{isSubmitting ? t[lang].submitting : t[lang].bookNow}</span>
+            </span>
+          </button>
 
           {successMessage && (
             <div className="message-success">{successMessage}</div>
