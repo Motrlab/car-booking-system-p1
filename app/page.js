@@ -6,14 +6,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import Image from "next/image";
 import ComingSoon from "./coming-soon/page";
 
-export default function Home() {
+
   const isOpen = false;
 
 export default function Home() {
   return isOpen ? <MainApp /> : <ComingSoon />;
 
 }
-
+/*
 export default function Home() {
   const [formData, setFormData] = useState({
     customerName: "",
@@ -21,7 +21,7 @@ export default function Home() {
     carType: "",
     service: "",
     date: null,
-  });
+  });*/
   const [isSubmitting, setIsSubmitting] = useState(false);
     const [lang, setLang] = useState("ar");
  const isArabic = lang === "ar";
@@ -449,5 +449,5 @@ export default function Home() {
       </div>
     </main>
   );
-}
+
 
