@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ComingSoonPage() {
   const [formData, setFormData] = useState({
@@ -11,6 +11,18 @@ export default function ComingSoonPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreen = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
 
   const convertArabicDigitsToEnglish = (value) => {
     return value.replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
@@ -78,23 +90,23 @@ export default function ComingSoonPage() {
     try {
       setIsSubmitting(true);
 
-      // مؤقتًا فقط
-const res = await fetch("/api/leads", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    name,
-    phone,
-  }),
-});
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          phone,
+        }),
+      });
 
-const data = await res.json();
+      await res.json();
 
-if (!res.ok) {
-  throw new Error("failed");
-}
+      if (!res.ok) {
+        throw new Error("failed");
+      }
+
       setSuccessMessage("تم تسجيل اهتمامك بنجاح، وسيتم التواصل معك بعد الافتتاح");
       setFormData({
         name: "",
@@ -113,7 +125,12 @@ if (!res.ok) {
       <div style={styles.overlay}></div>
 
       <div style={styles.contentWrap}>
-        <div style={styles.formBox}>
+        <div
+          style={{
+            ...styles.formBox,
+            transform: isMobile ? "translateY(-120px)" : "translateY(-20px)",
+          }}
+        >
           <form onSubmit={handleSubmit}>
             <input
               name="name"
