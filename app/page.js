@@ -1,19 +1,10 @@
-"use client";
+/*"use client";
 
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Image from "next/image";
-import ComingSoon from "./coming-soon/page";
 
-
-  const isOpen = false;
-
-export default function Home() {
-  return isOpen ? <MainApp /> : <ComingSoon />;
-
-}
-/*
 export default function Home() {
   const [formData, setFormData] = useState({
     customerName: "",
@@ -21,7 +12,7 @@ export default function Home() {
     carType: "",
     service: "",
     date: null,
-  });*/
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
     const [lang, setLang] = useState("ar");
  const isArabic = lang === "ar";
@@ -205,7 +196,7 @@ export default function Home() {
         setErrorMessage(t[lang].requiredService);
         return;
       }*/
-       if (isSubmitting) return;
+   /*    if (isSubmitting) return;
       setSuccessMessage("");
       setErrorMessage("");
       setIsSubmitting(true);
@@ -402,7 +393,8 @@ export default function Home() {
           </button>
         </div>
       </div> 
-      */}
+      
+}
 
           <div className="date-wrapper">
             <DatePicker
@@ -449,5 +441,12 @@ export default function Home() {
       </div>
     </main>
   );
+}
 
+*/
 
+import ComingSoon from "./coming-soon/page";
+
+export default function Home() {
+  return <ComingSoon />;
+}
