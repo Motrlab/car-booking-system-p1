@@ -206,44 +206,43 @@ const styles = {
     padding: "24px 16px 88px",
     boxSizing: "border-box",
   },
+formBox: {
+  width: "100%",
+  maxWidth: "340px",
+  background: "rgba(28, 28, 28, 0.58)",
+  backdropFilter: "blur(10px)",
+  WebkitBackdropFilter: "blur(10px)",
+  borderRadius: "18px",
+  padding: "20px", // ⬅️ كان 14px
+  boxShadow: "0 10px 26px rgba(0,0,0,0.28)",
+},
 
-  formBox: {
-    width: "100%",
-    maxWidth: "340px",
-    background: "rgba(28, 28, 28, 0.58)",
-    backdropFilter: "blur(10px)",
-    WebkitBackdropFilter: "blur(10px)",
-    borderRadius: "18px",
-    padding: "14px",
-    boxShadow: "0 10px 26px rgba(0,0,0,0.28)",
-  },
+input: {
+  width: "100%",
+  boxSizing: "border-box",
+  padding: "14px 16px", // ⬅️ كان 11px
+  minHeight: "52px",     // ⬅️ كان 44px
+  marginBottom: "14px",  // ⬅️ كان 10px
+  borderRadius: "12px",
+  border: "1px solid #d9d9d9",
+  background: "#fff",
+  color: "#111",
+  fontSize: "15px",
+  outline: "none",
+  textAlign: "right",
+},
 
-  input: {
-    width: "100%",
-    boxSizing: "border-box",
-    padding: "11px 14px",
-    minHeight: "44px",
-    marginBottom: "10px",
-    borderRadius: "10px",
-    border: "1px solid #d9d9d9",
-    background: "#fff",
-    color: "#111",
-    fontSize: "14px",
-    outline: "none",
-    textAlign: "right",
-  },
-
-  button: {
-    width: "100%",
-    minHeight: "46px",
-    border: "none",
-    borderRadius: "10px",
-    background: "#d9b36b",
-    color: "#fff",
-    fontSize: "15px",
-    fontWeight: "700",
-    cursor: "pointer",
-  },
+button: {
+  width: "100%",
+  minHeight: "54px",     // ⬅️ كان 46px
+  border: "none",
+  borderRadius: "12px",
+  background: "#d9b36b",
+  color: "#fff",
+  fontSize: "16px",
+  fontWeight: "700",
+  cursor: "pointer",
+},
 
   errorMessage: {
     marginTop: "10px",
