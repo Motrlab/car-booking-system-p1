@@ -39,7 +39,7 @@ export default function Home() {
     const t = {
       ar: {
         title: "حجز موعد العناية بالسيارات",
-        subtitle: "اختر الخدمة والوقت المناسب وأرسل طلبك بسهولة",
+        subtitle: "اختر الخدمة والوقت المناسب و//أرسل طلبك بسهولة",
         customerName: "اسم العميل",
         phone:"رقم الجوال (05xxxxxxxx)",
         carType: "نوع السيارة",
