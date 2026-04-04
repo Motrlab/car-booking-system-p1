@@ -1,27 +1,131 @@
-html, body {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: #f4f6f9;
-  font-family: Arial, sans-serif;
-}
-
-.button-content {
-  display: inline-flex;
+/* ===== الصفحة العامة ===== */
+.booking-page {
+  background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+  min-height: 100vh;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  padding: 20px;
 }
 
+/* ===== البطاقة ===== */
+.booking-card {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 30px 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+/* ===== اللغة ===== */
+.lang-switcher {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+
+.lang-button {
+  background: #111;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* ===== الهيدر ===== */
+.booking-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.logo {
+  margin-bottom: 10px;
+}
+
+.booking-header h1 {
+  font-size: 20px;
+  margin: 0;
+  color: #111;
+}
+
+.booking-header p {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+}
+
+/* ===== الفورم ===== */
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ===== التاريخ ===== */
+.date-wrapper {
+  position: relative;
+}
+
+.custom-date-input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+}
+
+.date-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: #888;
+}
+
+/* ===== الزر ===== */
+.booking-button {
+  margin-top: 10px;
+  background: linear-gradient(135deg, #111, #333);
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.booking-button:hover {
+  opacity: 0.9;
+}
+
+.booking-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== محتوى الزر ===== */
+.button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* ===== سبنر ===== */
 .button-spinner {
   width: 18px;
   height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  border-top-color: #fff;
+  border: 2px solid #fff;
+  border-top: 2px solid transparent;
   border-radius: 50%;
-  animation: spin 0.7s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
@@ -30,103 +134,7 @@ body {
   }
 }
 
-.booking-button:disabled {
-  opacity: 0.85;
-  cursor: not-allowed;
-}
-
-.booking-page {
-  min-height: 100vh;
-  padding: 16px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.booking-card {
-  width: 100%;
-  max-width: 520px;
-  background: #ffffff;
-  padding: 22px;
-  border-radius: 16px;
-  box-shadow: 0 0 18px rgba(0, 0, 0, 0.08);
-  box-sizing: border-box;
-}
-
-.booking-header h1 {
-  margin: 0 0 8px;
-  text-align: center;
-  font-size: 24px;
-  line-height: 1.4;
-  color: #111;
-}
-
-.booking-header p {
-  margin: 0 0 20px;
-  text-align: center;
-  color: #666;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.booking-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.full-width {
-  width: 100%;
-}
-
-.date-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.custom-date-input {
-  width: 100%;
-  min-height: 52px;
-  padding: 0 42px 0 14px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  outline: none;
-  background: #fafafa;
-  font-size: 16px;
-  text-align: right;
-  cursor: pointer;
-  color: #111;
-  box-sizing: border-box;
-}
-
-.custom-date-input::placeholder {
-  color: #888;
-}
-
-.date-arrow {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  color: #666;
-  font-size: 12px;
-}
-
-.booking-button {
-  background: #111;
-  color: #fff;
-  padding: 14px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: bold;
-  width: 100%;
-  min-height: 54px;
-}
-
+/* ===== رسائل ===== */
 .message-success {
   background: #ecfdf3;
   color: #166534;
@@ -134,30 +142,7 @@ body {
   padding: 12px;
   border-radius: 10px;
   text-align: center;
-  font-size: 15px;
-  line-height: 1.6;
-}
-.lang-switcher {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 12px;
-}
-
-.lang-button {
-  background: #f3f4f6;
-  color: #111;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 8px 14px;
-  cursor: pointer;
   font-size: 14px;
-  font-weight: bold;
-}
-
-.logo {
-  width: 140px;
-  display: block;
-  margin: 0 auto 12px;
 }
 
 .message-error {
@@ -167,26 +152,82 @@ body {
   padding: 12px;
   border-radius: 10px;
   text-align: center;
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 14px;
 }
 
-/* لابتوب */
-@media (min-width: 768px) {
-  .booking-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
+/* ===== الجوال ===== */
+@media (max-width: 600px) {
+  .booking-card {
+    padding: 20px;
+    border-radius: 16px;
   }
 
-  .booking-button {
-    grid-column: span 2;
-  }
-
-  .date-wrapper {
-    grid-column: span 2;
-  }
-  .logo {
-    width: 180px;
+  .booking-header h1 {
+    font-size: 18px;
   }
 }
+/*
+.services-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.services-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.service-card {
+  background: #f8fafc;
+  border: 1px solid #dbe3ea;
+  border-radius: 16px;
+  min-height: 88px;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #111;
+}
+
+.service-card:hover {
+  transform: translateY(-2px);
+  border-color: #111;
+  background: #ffffff;
+}
+
+.service-card.active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+}
+
+.service-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.service-title {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.4;
+}
+
+@media (max-width: 480px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+}*/

@@ -51,6 +51,7 @@ export default function Home() {
         requiredPhone: "رقم الجوال مطلوب",
         invalidPhone: "رقم الجوال يجب أن يكون 10 أرقام",
         requiredDate: "يرجى اختيار التاريخ والوقت",
+        //requiredService: "يرجى اختيار الخدمة",
         success: "تم الحجز بنجاح ✅",
         error: "حدث خطأ ❌",
         sendingError: "فيه خطأ أثناء الإرسال",
@@ -75,6 +76,7 @@ export default function Home() {
         requiredPhone: "Mobile number is required",
         invalidPhone: "Mobile number must be 10 digits",
         requiredDate: "Please select date and time",
+       // requiredService: "Please sekect a services",
         success: "Booking completed successfully ✅",
         error: "An error occurred ❌",
         sendingError: "There was an error sending the request",
@@ -190,6 +192,10 @@ export default function Home() {
 
   const handleSubmit = async () => {
     try {
+      /*if (!formData.service) {
+        setErrorMessage(t[lang].requiredService);
+        return;
+      }*/
        if (isSubmitting) return;
       setSuccessMessage("");
       setErrorMessage("");
@@ -333,19 +339,61 @@ export default function Home() {
             placeholder={t[lang].carType}
             style={inputStyle}
           />
+      <select
+  name="service"
+  value={formData.service}
+  onChange={handleChange}
+  style={inputStyle}
+>
+  <option value="">{t[lang].service}</option>
+  <option value="تلميع">{t[lang].polishing}</option>
+  <option value="تظليل">{t[lang].tinting}</option>
+  <option value="PPF">{t[lang].ppf}</option>
+  <option value="تنظيف تفصيلي">{t[lang].detailing}</option>
+</select>
 
-              <select
-            name="service"
-            value={formData.service}
-            onChange={handleChange}
-            style={inputStyle}
+  {/* <div className="services-section">
+        <label className="services-label">{t[lang].service}</label>
+
+        <div className="services-grid">
+          <button
+            type="button"
+            className={`service-card ${formData.service === "تلميع" ? "active" : ""}`}
+            onClick={() => setFormData({ ...formData, service: "تلميع" })}
           >
-            <option value="">{t[lang].service}</option>
-            <option value="تلميع">{t[lang].polishing}</option>
-            <option value="تظليل">{t[lang].tinting}</option>
-            <option value="PPF">{t[lang].ppf}</option>
-            <option value="تنظيف تفصيلي">{t[lang].detailing}</option>
-          </select>
+            <span className="service-icon">✨</span>
+            <span className="service-title">{t[lang].polishing}</span>
+          </button>
+
+          <button
+            type="button"
+            className={`service-card ${formData.service === "تظليل" ? "active" : ""}`}
+            onClick={() => setFormData({ ...formData, service: "تظليل" })}
+          >
+            <span className="service-icon">🕶️</span>
+            <span className="service-title">{t[lang].tinting}</span>
+          </button>
+
+          <button
+            type="button"
+            className={`service-card ${formData.service === "PPF" ? "active" : ""}`}
+            onClick={() => setFormData({ ...formData, service: "PPF" })}
+          >
+            <span className="service-icon">🛡️</span>
+            <span className="service-title">{t[lang].ppf}</span>
+          </button>
+
+          <button
+            type="button"
+            className={`service-card ${formData.service === "تنظيف تفصيلي" ? "active" : ""}`}
+            onClick={() => setFormData({ ...formData, service: "تنظيف تفصيلي" })}
+          >
+            <span className="service-icon">🧼</span>
+            <span className="service-title">{t[lang].detailing}</span>
+          </button>
+        </div>
+      </div> 
+      */}
 
           <div className="date-wrapper">
             <DatePicker
