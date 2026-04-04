@@ -17,3 +17,10 @@ model Booking {
   status       String   @default("pending")
   createdAt    DateTime @default(now())
 }
+
+model Leads {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String
+  createdAt DateTime @default(now())
+}

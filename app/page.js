@@ -4,6 +4,15 @@ import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Image from "next/image";
+import ComingSoon from "./coming-soon/page";
+
+export default function Home() {
+  const isOpen = false;
+
+export default function Home() {
+  return isOpen ? <MainApp /> : <ComingSoon />;
+
+}
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -39,7 +48,7 @@ export default function Home() {
     const t = {
       ar: {
         title: "حجز موعد العناية بالسيارات",
-        subtitle: "اختر الخدمة والوقت المناسب و//أرسل طلبك بسهولة",
+        subtitle: "اختر الخدمة والوقت المناسب وأرسل طلبك بسهولة",
         customerName: "اسم العميل",
         phone:"رقم الجوال (05xxxxxxxx)",
         carType: "نوع السيارة",
