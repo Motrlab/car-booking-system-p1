@@ -304,7 +304,7 @@ const styles = {
 
   servicesBar: {
     position: "absolute",
-    bottom: 0,
+    bottom: "60px",
     left: 0,
     width: "100%",
     zIndex: 3,
