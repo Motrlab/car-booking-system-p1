@@ -24,3 +24,56 @@ model Leads {
   phone     String
   createdAt DateTime @default(now())
 }
+
+model Worker {
+  id              String       @id @default(uuid())
+  fullName        String
+  iqamaNumber     String       @unique
+  passportNumber  String?      @unique
+  iqamaExpiryDate DateTime?
+  salary          Float?
+  technicianType  String
+  isActive        Boolean      @default(true)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  vehicleJobs     VehicleJob[]
+}
+
+model VehicleJob {
+  id             String         @id @default(uuid())
+  customerName   String
+  phone          String
+  carBrand       String
+  carType        String
+  plateNumber    String
+  carColor       String?
+  carYear        String?
+  odometer       String?
+  serviceDetails String
+  cost           Float
+  workerId       String?
+  expectedExitAt DateTime?
+  actualExitAt   DateTime?
+  status         String         @default("received")
+  notes          String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  worker         Worker?        @relation(fields: [workerId], references: [id])
+  images         VehicleImage[]
+}
+
+model VehicleImage {
+  id        String      @id @default(uuid())
+  jobId      String
+  fileName   String
+  mimeType   String
+  category   String      @default("general")
+  data       Bytes
+  createdAt  DateTime    @default(now())
+
+  job        VehicleJob  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+}

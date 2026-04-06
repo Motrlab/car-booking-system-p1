@@ -2,6 +2,14 @@
 
 import { useEffect, useState } from "react";
 
+const services = [
+  "عزل حراري",
+  "حماية PPF",
+  "نانو سيراميك",
+  "بكجات تلميع",
+  "بكجات تنظيف داخلي",
+];
+
 export default function ComingSoonPage() {
   const [formData, setFormData] = useState({
     name: "",
@@ -121,6 +129,17 @@ export default function ComingSoonPage() {
 
   return (
     <main style={styles.page}>
+      <style>{`
+        @keyframes servicesMarquee {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
+
       <img src="/coming-soon.jpg" alt="MotrLab Coming Soon" style={styles.bg} />
       <div style={styles.overlay}></div>
 
@@ -167,6 +186,20 @@ export default function ComingSoonPage() {
           </form>
         </div>
       </div>
+
+      <div style={styles.servicesBar}>
+        <div style={styles.servicesFadeLeft}></div>
+        <div style={styles.servicesFadeRight}></div>
+
+        <div style={styles.servicesTrack}>
+          {[...services, ...services, ...services].map((service, index) => (
+            <div key={`${service}-${index}`} style={styles.serviceItem}>
+              <span style={styles.serviceDot}></span>
+              <span>{service}</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </main>
   );
 }
@@ -203,46 +236,47 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "flex-end",
-    padding: "24px 16px 88px",
+    padding: "24px 16px 120px",
     boxSizing: "border-box",
   },
-formBox: {
-  width: "100%",
-  maxWidth: "340px",
-  background: "rgba(28, 28, 28, 0.58)",
-  backdropFilter: "blur(10px)",
-  WebkitBackdropFilter: "blur(10px)",
-  borderRadius: "18px",
-  padding: "20px", // ⬅️ كان 14px
-  boxShadow: "0 10px 26px rgba(0,0,0,0.28)",
-},
 
-input: {
-  width: "100%",
-  boxSizing: "border-box",
-  padding: "14px 16px", // ⬅️ كان 11px
-  minHeight: "52px",     // ⬅️ كان 44px
-  marginBottom: "14px",  // ⬅️ كان 10px
-  borderRadius: "12px",
-  border: "1px solid #d9d9d9",
-  background: "#fff",
-  color: "#111",
-  fontSize: "15px",
-  outline: "none",
-  textAlign: "right",
-},
+  formBox: {
+    width: "100%",
+    maxWidth: "340px",
+    background: "rgba(28, 28, 28, 0.58)",
+    backdropFilter: "blur(10px)",
+    WebkitBackdropFilter: "blur(10px)",
+    borderRadius: "18px",
+    padding: "20px",
+    boxShadow: "0 10px 26px rgba(0,0,0,0.28)",
+  },
 
-button: {
-  width: "100%",
-  minHeight: "54px",     // ⬅️ كان 46px
-  border: "none",
-  borderRadius: "12px",
-  background: "#d9b36b",
-  color: "#fff",
-  fontSize: "16px",
-  fontWeight: "700",
-  cursor: "pointer",
-},
+  input: {
+    width: "100%",
+    boxSizing: "border-box",
+    padding: "14px 16px",
+    minHeight: "52px",
+    marginBottom: "14px",
+    borderRadius: "12px",
+    border: "1px solid #d9d9d9",
+    background: "#fff",
+    color: "#111",
+    fontSize: "15px",
+    outline: "none",
+    textAlign: "right",
+  },
+
+  button: {
+    width: "100%",
+    minHeight: "54px",
+    border: "none",
+    borderRadius: "12px",
+    background: "#d9b36b",
+    color: "#fff",
+    fontSize: "16px",
+    fontWeight: "700",
+    cursor: "pointer",
+  },
 
   errorMessage: {
     marginTop: "10px",
@@ -266,5 +300,67 @@ button: {
     textAlign: "center",
     fontSize: "13px",
     lineHeight: 1.7,
+  },
+
+  servicesBar: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    width: "100%",
+    zIndex: 3,
+    overflow: "hidden",
+    background: "rgba(10, 10, 10, 0.82)",
+    backdropFilter: "blur(8px)",
+    WebkitBackdropFilter: "blur(8px)",
+    borderTop: "1px solid rgba(255,255,255,0.08)",
+    padding: "14px 0",
+  },
+
+  servicesTrack: {
+    display: "flex",
+    width: "max-content",
+    animation: "servicesMarquee 24s linear infinite",
+  },
+
+  serviceItem: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    color: "#fff",
+    fontSize: "15px",
+    fontWeight: "600",
+    whiteSpace: "nowrap",
+    padding: "0 22px",
+  },
+
+  serviceDot: {
+    width: "8px",
+    height: "8px",
+    borderRadius: "50%",
+    background: "#d9b36b",
+    display: "inline-block",
+    flexShrink: 0,
+  },
+
+  servicesFadeLeft: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "60px",
+    height: "100%",
+    background: "linear-gradient(to right, rgba(10,10,10,0.95), rgba(10,10,10,0))",
+    zIndex: 2,
+    pointerEvents: "none",
+  },
+
+  servicesFadeRight: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    width: "60px",
+    height: "100%",
+    background: "linear-gradient(to left, rgba(10,10,10,0.95), rgba(10,10,10,0))",
+    zIndex: 2,
+    pointerEvents: "none",
   },
 };
