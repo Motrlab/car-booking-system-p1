@@ -1,18 +1,16 @@
 export default function sitemap() {
-  const baseUrl = "https://motrlab.com";
-
   return [
     {
-      url: `${baseUrl}/`,
+      url: "https://motrlab.com",
       lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 1,
     },
     {
-      url: `${baseUrl}/coming-soon`,
+      url: "https://motrlab.com/coming-soon",
       lastModified: new Date(),
-    },
-    {
-      url: `${baseUrl}/invoice`,
-      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
     },
   ];
 }
