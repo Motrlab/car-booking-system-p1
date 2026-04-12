@@ -41,25 +41,67 @@ export default function InvoicePage() {
   const id = params?.id;
 
   const [job, setJob] = useState(null);
+  const [invoice, setInvoice] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
+  const [actionMessage, setActionMessage] = useState("");
 
   useEffect(() => {
     if (!id) return;
 
-    const fetchJob = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch(`/api/jobs/list/${id}`);
-        const data = await res.json();
+        const jobRes = await fetch(`/api/jobs/list/${id}`);
+        const jobData = await jobRes.json();
 
-        if (data.success) {
-          setJob(data.job);
+        if (jobData.success) {
+          setJob(jobData.job);
+
+
+          if (jobData.job.invoice) {
+            setInvoice(jobData.job.invoice);
+          }
         }
       } catch (error) {
-        console.error("failed to fetch invoice job", error);
+        console.error("failed to fetch invoice page data", error);
       }
     };
 
-    fetchJob();
+    fetchData();
   }, [id]);
+
+  const handleCreateInvoice = async () => {
+    if (!job || isCreating || invoice) return;
+
+    try {
+      setIsCreating(true);
+      setActionMessage("");
+
+      const res = await fetch("/api/invoices/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          jobId: job.id,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setActionMessage(data.message || "فشل إنشاء الفاتورة");
+        return;
+      }
+
+      setInvoice(data.invoice);
+      setActionMessage("تم إصدار الفاتورة بنجاح");
+    } catch (error) {
+      console.error("create invoice error", error);
+      setActionMessage("حدث خطأ أثناء إنشاء الفاتورة");
+    } finally {
+      setIsCreating(false);
+    }
+  };
 
   if (!job) {
     return <div style={{ padding: 40 }}>جاري تحميل الفاتورة...</div>;
@@ -67,24 +109,32 @@ export default function InvoicePage() {
 
   const sellerName = "MotrLab";
   const vatNumber = "314671409900003";
+
+  const issuedAt = invoice?.issuedAt
+    ? new Date(invoice.issuedAt)
+    : new Date(job.createdAt);
+
   const invoiceNumber =
-    job.invoiceNumber || `INV-${String(job.id).slice(0, 6).toUpperCase()}`;
-  const issuedAt = new Date(job.createdAt);
+    invoice?.invoiceNumber ||
+    job.invoiceNumber ||
+    `INV-${String(job.id).slice(0, 6).toUpperCase()}`;
 
-  const total = Number(job.cost || 0);
-  const subtotal = total / 1.15;
-  const vatAmount = total - subtotal;
+  const total = Number(invoice?.total ?? job.cost ?? 0);
+  const subtotal = Number(invoice?.subtotal ?? total / 1.15);
+  const vatAmount = Number(invoice?.vatAmount ?? total - subtotal);
 
-  const tlv = generateTLVBase64(
-    sellerName,
-    vatNumber,
-    issuedAt.toISOString(),
-    total.toFixed(2),
-    vatAmount.toFixed(2)
-  );
+  const qrValue =
+    invoice?.qrCode ||
+    generateTLVBase64(
+      sellerName,
+      vatNumber,
+      issuedAt.toISOString(),
+      total.toFixed(2),
+      vatAmount.toFixed(2)
+    );
 
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(
-    tlv
+    qrValue
   )}`;
 
   return (
@@ -92,9 +142,39 @@ export default function InvoicePage() {
       <style>{printStyles}</style>
 
       <div className="no-print" style={styles.topBar}>
-        <button onClick={() => window.print()} style={styles.printButton}>
-          🖨 طباعة الفاتورة
-        </button>
+        <div style={styles.actionButtonsWrap}>
+          <button
+            onClick={handleCreateInvoice}
+            disabled={!!invoice || isCreating}
+            style={{
+              ...styles.createButton,
+              opacity: invoice || isCreating ? 0.7 : 1,
+              cursor: invoice || isCreating ? "not-allowed" : "pointer",
+            }}
+          >
+            {invoice
+              ? "تم إصدار الفاتورة"
+              : isCreating
+              ? "جاري إنشاء الفاتورة..."
+              : "إنشاء فاتورة"}
+          </button>
+
+          <button
+            onClick={() => window.print()}
+            disabled={!invoice}
+            style={{
+              ...styles.printButton,
+              opacity: invoice ? 1 : 0.6,
+              cursor: invoice ? "pointer" : "not-allowed",
+            }}
+          >
+            🖨 طباعة الفاتورة
+          </button>
+        </div>
+
+        {actionMessage ? (
+          <div style={styles.actionMessage}>{actionMessage}</div>
+        ) : null}
       </div>
 
       <section style={styles.sheet}>
@@ -124,6 +204,15 @@ export default function InvoicePage() {
                 <span style={styles.metaValue}>{invoiceNumber}</span>
               </div>
 
+              {invoice?.invoiceSequenceFormatted ? (
+                <div style={styles.metaRow}>
+                  <span style={styles.metaLabel}>الرقم المتسلسل الداخلي</span>
+                  <span style={styles.metaValue}>
+                    {invoice.invoiceSequenceFormatted}
+                  </span>
+                </div>
+              ) : null}
+
               <div style={styles.metaRow}>
                 <span style={styles.metaLabel}>تاريخ الإصدار</span>
                 <span style={styles.metaValue}>
@@ -147,12 +236,16 @@ export default function InvoicePage() {
         <section style={styles.customerBanner}>
           <div>
             <div style={styles.bannerLabel}>اسم العميل</div>
-            <div style={styles.bannerValue}>{job.customerName}</div>
+            <div style={styles.bannerValue}>
+              {invoice?.customerName || job.customerName}
+            </div>
           </div>
 
           <div>
             <div style={styles.bannerLabel}>رقم الجوال</div>
-            <div style={styles.bannerValue}>{job.phone}</div>
+            <div style={styles.bannerValue}>
+              {invoice?.customerPhone || job.phone}
+            </div>
           </div>
         </section>
 
@@ -163,13 +256,16 @@ export default function InvoicePage() {
             <div style={styles.infoItem}>
               <span style={styles.infoLabel}>الشركة / النوع</span>
               <span style={styles.infoValue}>
-                {job.carBrand} - {job.carType}
+                {(invoice?.carBrand ?? job.carBrand) || "-"} -{" "}
+                {(invoice?.carType ?? job.carType) || "-"}
               </span>
             </div>
 
             <div style={styles.infoItem}>
               <span style={styles.infoLabel}>رقم اللوحة</span>
-              <span style={styles.infoValue}>{job.plateNumber}</span>
+              <span style={styles.infoValue}>
+                {invoice?.plateNumber || job.plateNumber || "-"}
+              </span>
             </div>
 
             <div style={styles.infoItem}>
@@ -180,6 +276,13 @@ export default function InvoicePage() {
             <div style={styles.infoItem}>
               <span style={styles.infoLabel}>سنة الصنع</span>
               <span style={styles.infoValue}>{job.carYear || "-"}</span>
+            </div>
+
+            <div style={styles.infoItem}>
+              <span style={styles.infoLabel}>آخر 6 من الهيكل</span>
+              <span style={styles.infoValue}>
+                {invoice?.vinLast6 || job.vinLast6 || "-"}
+              </span>
             </div>
           </div>
 
@@ -214,7 +317,9 @@ export default function InvoicePage() {
 
         <section style={styles.descriptionSection}>
           <div style={styles.sectionHeader}>الوصف / الخدمة</div>
-          <div style={styles.descriptionBox}>{job.serviceDetails}</div>
+          <div style={styles.descriptionBox}>
+            {invoice?.serviceDetails || job.serviceDetails}
+          </div>
         </section>
 
         <section style={styles.tableSection}>
@@ -230,7 +335,9 @@ export default function InvoicePage() {
 
             <tbody>
               <tr>
-                <td style={styles.tdDescription}>{job.serviceDetails}</td>
+                <td style={styles.tdDescription}>
+                  {invoice?.serviceDetails || job.serviceDetails}
+                </td>
                 <td style={styles.tdCenter}>1</td>
                 <td style={styles.tdCenter}>{subtotal.toFixed(2)}</td>
                 <td style={styles.tdCenter}>{total.toFixed(2)}</td>
@@ -305,7 +412,26 @@ const styles = {
     maxWidth: "980px",
     margin: "0 auto 12px",
     display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "10px",
+  },
+
+  actionButtonsWrap: {
+    display: "flex",
+    gap: "10px",
+    flexWrap: "wrap",
     justifyContent: "center",
+  },
+
+  createButton: {
+    background: "#111827",
+    color: "#fff",
+    border: "none",
+    borderRadius: "10px",
+    padding: "10px 18px",
+    fontSize: "14px",
+    fontWeight: "bold",
   },
 
   printButton: {
@@ -314,9 +440,17 @@ const styles = {
     border: "none",
     borderRadius: "10px",
     padding: "10px 18px",
-    cursor: "pointer",
     fontSize: "14px",
     fontWeight: "bold",
+  },
+
+  actionMessage: {
+    fontSize: "13px",
+    color: "#166534",
+    background: "#ecfdf3",
+    border: "1px solid #bbf7d0",
+    padding: "8px 12px",
+    borderRadius: "10px",
   },
 
   sheet: {
@@ -693,14 +827,12 @@ const printStyles = `
     print-color-adjust: exact;
   }
 
-  /* 👇 أهم جزء */
   section {
     box-shadow: none !important;
     border: none !important;
-      page-break-inside: avoid;
+    page-break-inside: avoid;
   }
 
-  /* 👇 نخلي الورقة تملأ الصفحة */
   main {
     padding: 0 !important;
     background: #fff !important;
@@ -708,7 +840,7 @@ const printStyles = `
 
   @page {
     size: A4;
-    margin: 6mm; /* أقل شوي عشان تدخل صفحة وحده */
+    margin: 6mm;
   }
 }
 `;

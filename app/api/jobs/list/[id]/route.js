@@ -9,6 +9,7 @@ export async function GET(req, context) {
       where: { id },
       include: {
         worker: true,
+        invoice:true,
       },
     });
 

@@ -26,22 +26,22 @@ model Leads {
 }
 
 model Worker {
-  id              String       @id @default(uuid())
+  id              String    @id @default(uuid())
   fullName        String
-  iqamaNumber     String       @unique
-  passportNumber  String?      @unique
+  iqamaNumber     String    @unique
+  passportNumber  String?   @unique
   iqamaExpiryDate DateTime?
   salary          Float?
   technicianType  String
-  isActive        Boolean      @default(true)
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
-  vehicleJobs     VehicleJob[]
+  vehicleJobs VehicleJob[]
 }
 
 model VehicleJob {
-  id             String         @id @default(uuid())
+  id             String    @id @default(uuid())
   customerName   String
   phone          String
   carBrand       String
@@ -50,30 +50,75 @@ model VehicleJob {
   carColor       String?
   carYear        String?
   odometer       String?
+  vinLast6       String?
   serviceDetails String
   cost           Float
   workerId       String?
   expectedExitAt DateTime?
   actualExitAt   DateTime?
-  status         String         @default("received")
+  status         String    @default("received")
   notes          String?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
-  worker         Worker?        @relation(fields: [workerId], references: [id])
-  images         VehicleImage[]
+  worker  Worker?        @relation(fields: [workerId], references: [id])
+  images  VehicleImage[]
+  invoice Invoice?
+
+  @@index([workerId])
 }
 
 model VehicleImage {
-  id        String      @id @default(uuid())
-  jobId      String
-  fileName   String
-  mimeType   String
-  category   String      @default("general")
-  data       Bytes
-  createdAt  DateTime    @default(now())
+  id        String   @id @default(uuid())
+  jobId     String
+  fileName  String
+  mimeType  String
+  category  String   @default("general")
+  data      Bytes
+  createdAt DateTime @default(now())
 
-  job        VehicleJob  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  job VehicleJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+}
+
+model InvoiceSequence {
+  id         Int @id @default(autoincrement())
+  year       Int
+  month      Int
+  lastNumber Int
+
+  @@unique([year, month])
+}
+
+model Invoice {
+  id    String @id @default(uuid())
+  jobId String @unique
+
+  invoiceNumber            String?
+  invoiceSequence          Int?    @unique
+  invoiceSequenceFormatted String? @unique
+
+  customerName  String?
+  customerPhone String?
+
+  carBrand    String?
+  carType     String?
+  plateNumber String?
+  vinLast6    String?
+
+  serviceDetails String?
+
+  subtotal  Float?
+  vatAmount Float?
+  total     Float?
+
+  qrCode    String?
+  status    String    @default("issued")
+  issuedAt  DateTime?
+  createdAt DateTime  @default(now())
+
+  job VehicleJob @relation(fields: [jobId], references: [id], onDelete: Restrict)
 
   @@index([jobId])
 }

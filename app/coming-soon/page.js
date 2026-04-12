@@ -10,6 +10,7 @@ const services = [
   "بكجات تنظيف داخلي",
 ];
 
+
 export default function ComingSoonPage() {
   const [formData, setFormData] = useState({
     name: "",
@@ -141,6 +142,14 @@ export default function ComingSoonPage() {
       `}</style>
 
       <img src="/coming-soon.jpg" alt="MotrLab Coming Soon" style={styles.bg} />
+      <img
+  src="/logo.png"
+  alt="logo"
+  style={{
+    ...styles.logoOverlay,
+    width: isMobile ? "140px" : "200px",
+  }}
+/>
       <div style={styles.overlay}></div>
 
       <div style={styles.contentWrap}>
@@ -222,6 +231,13 @@ const styles = {
     objectPosition: "center top",
     backgroundColor: "#000",
   },
+  logoOverlay: {
+  position: "absolute",
+  top: "4%",
+  left: "50%",
+  transform: "translateX(-50%)",
+  zIndex: 3,
+},
 
   overlay: {
     position: "absolute",
