@@ -233,7 +233,7 @@ const styles = {
   },
   logoOverlay: {
   position: "absolute",
-  top: "4%",
+  top: "3%",
   left: "50%",
   transform: "translateX(-50%)",
   zIndex: 3,
